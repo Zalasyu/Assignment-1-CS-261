@@ -1,7 +1,7 @@
 # Course: CS261 - Data Structures
-# Student Name:
-# Assignment:
-# Description:
+# Student Name: Alec Moldovan
+# Assignment: 1
+# Description: The purpose of this assignment is to give you practice with programming in Python.
 
 import random
 import string
@@ -13,9 +13,25 @@ from static_array import *
 
 def min_max(arr: StaticArray) -> ():
     """
-    TODO: Write this implementation
+    INPUT: A StaticArray object
+    MECHANICS: Iterate through each element and find the max and min value 
+    OUTPUT: Tuple (min, max)
     """
-    pass
+    max = arr.get(0)
+    min = arr.get(0)
+
+
+    # Find the max value
+    for idx in range(arr.size()):
+        if max < arr.get(idx):
+            max = arr.get(idx)
+
+    # Find the min value
+    for idx in range(arr.size()):
+        if min > arr.get(idx):
+            min = arr.get(idx)
+
+    return (min, max)
 
 
 # ------------------- PROBLEM 2 - FIZZ_BUZZ ---------------------------------
@@ -23,29 +39,120 @@ def min_max(arr: StaticArray) -> ():
 
 def fizz_buzz(arr: StaticArray) -> StaticArray:
     """
-    TODO: Write this implementation
+    INPUT: A StaticArray object
+    MECHANICS: Iterate through array
+                1) If number in the array is divisible by 3, the corresponding element in the 
+                new array should be the string ‘fizz’.
+                2) If number in the array is divisible by 5, the corresponding element in the 
+                new array should be the string ‘buzz’.
+                3) If number in the array is both a multiple of 3 and a multiple of 5, the 
+                corresponding element in the new array should be the string ‘fizzbuzz’.
+                4) In all other cases, the element in the new array should have the same value as in the original array
+    OUTPUT: A StaticArray object
     """
-    pass
+    new_arr = StaticArray(arr.size())
+    for idx in range(arr.size()):
 
+        # Check if number is divisble by 3
+        if (arr[idx] % 3 == 0) and (arr[idx] % 5 != 0):
+            new_arr[idx] = "fizz"
+
+        # Check if number is divisble by 5
+        elif (arr[idx] % 5 == 0) and  (arr[idx] % 3 != 0):
+            new_arr[idx] = "buzz"
+
+        # Check if number is divisble by 3 and 5
+        elif (arr[idx] % 3 == 0) and (arr[idx] % 5 == 0):
+            new_arr[idx] = "fizzbuzz"
+
+        # If number is not divisble by 3 or 5
+        else:
+            new_arr[idx] = arr[idx]
+
+    return new_arr
 
 # ------------------- PROBLEM 3 - REVERSE -----------------------------------
 
 
 def reverse(arr: StaticArray) -> None:
     """
-    TODO: Write this implementation
+    INPUT: A StaticArray Object
+    MECHANICS: Reverses the order of a StaticArray object's list (IN-PLACE)
+    OUTPUT: A reversed StaticArray Object's list
     """
-    pass
+    j = arr.size() - 1
+    i = 0
+    while (i < j):
+        tmp = arr[i]
+        arr[i] = arr[j]
+        arr[j] = tmp
+        i += 1
+        j -= 1
+    return None
+
+
 
 
 # ------------------- PROBLEM 4 - ROTATE ------------------------------------
 
+def rotateLeft(arr:StaticArray, size:int) -> StaticArray:
+    """
+    INPUT: A StaticArray object, and an integer
+    MECHANICS: Rotates the StaticArray object's list left times to real_rot int value
+    OUTPUT: A new StaticArray object
+    """
+    temp = arr[0]
+    for i in range(size - 1):
+        arr[i] = arr[i+1]
+    arr[size-1] = temp
+    return arr
+
+def rotateRight(arr:StaticArray, size:int) -> StaticArray:
+    """
+    INPUT: A StaticArray object, and an integer
+    MECHANICS: Rotates the StaticArray object's list right times to real_rot int value
+    OUTPUT: A new StaticArray object
+    """
+    temp = arr[size-1]
+    for i in range(size - 1, 0, -1):
+        arr[i] = arr[i-1]
+    arr[0] = temp
+    return arr
+
 
 def rotate(arr: StaticArray, steps: int) -> StaticArray:
     """
-    TODO: Write this implementation
+    INPUT: A StaticArray object AND number of shift (+int = right shift; -int = left shift)
+    MECHANICS: Takes the mod of steps by the array size,
+                since a rotation of either direction equal to the size outputs the same array. 
+                Assign real_rot to steps % array size
+            ex. 
+                array size = 4
+                steps = 9
+                real_rot = 1
+
+                Two times the same list is seen.
+                Thereby skip to second full rotation and rotate once to the right.
+    OUTPUT: A new StaticArray object with its list shifted left or right units.
     """
-    pass
+    real_rot = abs(steps) % arr.size()
+    size = arr.size()
+
+    # Copy Array to a new separate array (In order not to modify original array)
+    copy_arr = StaticArray(size)
+    for i in range(size):
+        copy_arr[i] = arr.get(i)
+
+    if (real_rot == 0) or (steps == 0):
+        return copy_arr
+    elif steps < 0:
+        for i in range(real_rot):
+            new_arr = rotateLeft(copy_arr, size)
+        return copy_arr
+    elif steps > 0:
+        for i in range(real_rot):
+            new_arr = rotateRight(copy_arr, size)
+        return copy_arr
 
 
 # ------------------- PROBLEM 5 - SA_RANGE ----------------------------------
@@ -53,9 +160,26 @@ def rotate(arr: StaticArray, steps: int) -> StaticArray:
 
 def sa_range(start: int, end: int) -> StaticArray:
     """
-    TODO: Write this implementation
+    INPUT: Two integers
+
+    MECHANICS: 
+                1. Find the number of elements expected => range
+                2. Create a StaticArray of size range
+                3. Stepwise increment the value from start value to end if end > start; Otherwise decrement.
+
+    OUTPUT: A StaticArray object that contains a sequence of integers from start to end variables' values
     """
-    pass
+    range = abs((end-start)) + 1
+    arr = StaticArray(range)
+    step = 0
+    while step < range:
+        arr[step] = start
+        step += 1
+        if end < start:
+            start -= 1
+        else:
+            start += 1
+    return arr
 
 
 # ------------------- PROBLEM 6 - IS_SORTED ---------------------------------
@@ -63,9 +187,34 @@ def sa_range(start: int, end: int) -> StaticArray:
 
 def is_sorted(arr: StaticArray) -> int:
     """
-    TODO: Write this implementation
+    INPUT: A StaticArray Object
+    MECHANICS:
+    OUTPUT:[0,1,2]; 0 = Not sorted; 1 = ascending order; 2 = descending order
     """
-    pass
+    size = arr.size()
+
+    # import pdb; pdb.set_trace()
+    if size == 1:
+        return 1
+    # Checking if list descends 
+    elif arr[0] > arr[size - 1]:
+
+        for i in range(1,size - 1):
+            # Check if an a previous element is smaller than the current element
+            if  arr[i-1] <= arr[i]:
+                return 0
+        return 2
+    # Check if list ascends
+    elif arr[0] < arr[size - 1]:
+
+        for i in range(1,size - 1):
+            # Check if an a previous element is bigger than the current element
+            if arr[i-1] >= arr[i]:
+                return 0
+        return 1
+        
+
+
 
 
 # ------------------- PROBLEM 7 - SA_SORT -----------------------------------
@@ -73,10 +222,14 @@ def is_sorted(arr: StaticArray) -> int:
 
 def sa_sort(arr: StaticArray) -> None:
     """
-    TODO: Write this implementation
+    INPUT: A StaticArray object (unsorted)
+    MECHANICS:
+    OUTPUT: A sorted ascending ordered StaticArray object list
     """
-    pass
-
+    size = arr.size()
+    if size > 1:
+        mid = size/2
+        low = 
 
 # ------------------- PROBLEM 8 - REMOVE_DUPLICATES -------------------------
 
@@ -159,6 +312,7 @@ if __name__ == "__main__":
     for i, value in enumerate([7, 8, 6, -5, 4]):
         arr[i] = value
     print(min_max(arr))
+    
 
 
     print('\n# min_max example 2')
