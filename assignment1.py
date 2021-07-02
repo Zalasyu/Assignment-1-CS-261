@@ -212,9 +212,6 @@ def is_sorted(arr: StaticArray) -> int:
             if arr[i-1] >= arr[i]:
                 return 0
         return 1
-        
-
-
 
 
 # ------------------- PROBLEM 7 - SA_SORT -----------------------------------
@@ -228,8 +225,49 @@ def sa_sort(arr: StaticArray) -> None:
     """
     size = arr.size()
     if size > 1:
-        mid = size/2
-        low = 
+        # Floor division
+        mid = size//2
+        if size % 2 == 0:
+            low = StaticArray(mid)
+            high = StaticArray(mid)
+        else:
+            low = StaticArray(mid)
+            high = StaticArray(mid+1)
+
+        # Initialize low end StaticArray
+        for idx in range(0, mid):
+            low[idx] = arr[idx]
+
+
+        # Initialize high end StaticArray
+        for count, idx in enumerate(range(mid, size)):
+            high[count] = arr[idx]
+
+
+        sa_sort(low)
+        sa_sort(high)
+        
+        i = 0
+        j = 0
+        k = 0
+
+        while i < low.size() and j < high.size():
+            if low[i] < high[j]:
+                arr[k] = low[i]
+                i += 1
+            else:
+                arr[k] = high[j]
+                j += 1
+            k += 1
+        while i < low.size():
+            arr[k] = low[i]
+            i += 1
+            k += 1
+
+        while j < high.size():
+            arr[k] = high[j]
+            j += 1
+            k += 1
 
 # ------------------- PROBLEM 8 - REMOVE_DUPLICATES -------------------------
 

@@ -174,7 +174,8 @@ def test_sa_sort(capfd):
                 "Started sorting large array\n",
                 "Finished sorting large array\n" ]
 
-    for count, case in enumerate(test_cases):
+    count = 0
+    for case in test_cases:
         arr = StaticArray(len(case))
 
         for i, value in enumerate(case):
@@ -187,6 +188,7 @@ def test_sa_sort(capfd):
         print(arr if len(case) < 50 else 'Finished sorting large array')
         out, err = capfd.readouterr()
         assert out == expected[count + 1]
+        count += 2
 
 
 
