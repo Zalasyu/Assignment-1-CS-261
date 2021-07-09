@@ -95,30 +95,6 @@ def reverse(arr: StaticArray) -> None:
 
 # ------------------- PROBLEM 4 - ROTATE ------------------------------------
 
-def rotateLeft(arr:StaticArray, size:int) -> StaticArray:
-    """
-    INPUT: A StaticArray object, and an integer
-    MECHANICS: Rotates the StaticArray object's list left times to real_rot int value
-    OUTPUT: A new StaticArray object
-    """
-    temp = arr[0]
-    for i in range(size - 1):
-        arr[i] = arr[i+1]
-    arr[size-1] = temp
-    return arr
-
-def rotateRight(arr:StaticArray, size:int) -> StaticArray:
-    """
-    INPUT: A StaticArray object, and an integer
-    MECHANICS: Rotates the StaticArray object's list right times to real_rot int value
-    OUTPUT: A new StaticArray object
-    """
-    temp = arr[size-1]
-    for i in range(size - 1, 0, -1):
-        arr[i] = arr[i-1]
-    arr[0] = temp
-    return arr
-
 
 def rotate(arr: StaticArray, steps: int) -> StaticArray:
     """
@@ -135,25 +111,24 @@ def rotate(arr: StaticArray, steps: int) -> StaticArray:
                 Thereby skip to second full rotation and rotate once to the right.
     OUTPUT: A new StaticArray object with its list shifted left or right units.
     """
-    real_rot = abs(steps) % arr.size()
-    size = arr.size()
+    # How many times do we see the same original array?
+    # Rotate the remainder steps and that is your final rotated array
+    size=arr.size()
+    result = StaticArray(size)
 
-    # Copy Array to a new separate array (In order not to modify original array)
-    copy_arr = StaticArray(size)
     for i in range(size):
-        copy_arr[i] = arr.get(i)
+        result[i] = arr[i]
 
-    if (real_rot == 0) or (steps == 0):
-        return copy_arr
-    elif steps < 0:
-        for i in range(real_rot):
-            new_arr = rotateLeft(copy_arr, size)
-        return copy_arr
-    elif steps > 0:
-        for i in range(real_rot):
-            new_arr = rotateRight(copy_arr, size)
-        return copy_arr
 
+    if steps>0:
+        # rotate right
+        for i in range(size):
+            result[i]=arr[((i-steps) % size + size) % size]
+    elif steps<0:
+        # rotate left
+        for i in range(arr.size()):
+            result[((i+steps) % size + size) % size] = arr[i]
+    return result
 
 # ------------------- PROBLEM 5 - SA_RANGE ----------------------------------
 
