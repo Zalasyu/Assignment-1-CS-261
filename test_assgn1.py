@@ -337,3 +337,38 @@ def test_sorted_squares(capfd):
         out, err = capfd.readouterr()
         assert out == expected[count+1]
         count += 2
+def test_add_numbers(capfd):
+    test_cases = (
+        ([1, 2, 3], [4, 5, 6]),
+        ([0], [2, 5]),([0], [0]),
+        ([2, 0, 9, 0, 7], [1, 0, 8]),
+        ([9, 9, 9], [9, 9, 9, 9])
+    )
+    expected = [
+        "Original nums: STAT_ARR Size: 3 [1, 2, 3] STAT_ARR Size: 3 [4, 5, 6]\n",
+        "Sum: STAT_ARR Size: 3 [5, 7, 9]\n",
+        "Original nums: STAT_ARR Size: 1 [0] STAT_ARR Size: 2 [2, 5]\n",
+        "Sum: STAT_ARR Size: 2 [2, 5]\n",
+        "Original nums: STAT_ARR Size: 1 [0] STAT_ARR Size: 1 [0]\n",
+        "Sum: STAT_ARR Size: 1 [0]\n",
+        "Original nums: STAT_ARR Size: 5 [2, 0, 9, 0, 7] STAT_ARR Size: 3 [1, 0, 8]\n",
+        "Sum: STAT_ARR Size: 5 [2, 1, 0, 1, 5]\n",
+        "Original nums: STAT_ARR Size: 3 [9, 9, 9] STAT_ARR Size: 4 [9, 9, 9, 9]\n",
+        "Sum: STAT_ARR Size: 5 [1, 0, 9, 9, 8]\n"
+    ]
+    count = 0
+    for num1, num2 in test_cases:
+        n1 = StaticArray(len(num1))
+        n2 = StaticArray(len(num2))
+        for i, value in enumerate(num1):
+            n1[i] = value
+        for i, value in enumerate(num2):
+            n2[i] = value
+        print('Original nums:', n1, n2)
+        out, err = capfd.readouterr()
+        assert out == expected[count]
+
+        print('Sum:', add_numbers(n1, n2))
+        out, err = capfd.readouterr()
+        assert out == expected[count+1]
+        count += 2

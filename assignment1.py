@@ -513,9 +513,44 @@ def sorted_squares(arr: StaticArray) -> StaticArray:
 
 def add_numbers(arr1: StaticArray, arr2: StaticArray) -> StaticArray:
     """
-    TODO: Write this implementation
+    INPUT: Two StaticArray objects (Represents positive numbers)
+    MECHANICS: Add digits together as a regular addition with carry over capabilities
+    OUTPUT: A StaticArray object with the new represented number
     """
-    pass
+    tot_size = arr1.size() + arr2.size()
+    temp_arr = StaticArray(tot_size)
+    idx1 = arr1.size() - 1
+    idx2 = arr2.size() - 1
+    carry_over = 0
+    idx = temp_arr.size() - 1
+    import pdb; pdb.set_trace()
+    while ((idx1 >= 0) and (idx2 >= 0)):
+        sum = carry_over + arr1[idx1] + arr2[idx2]
+        carry_over = int(sum /10)
+        temp_arr[idx] = sum % 10
+        idx -= 1
+        idx1 -= 1
+        idx2 -= 1
+    if carry_over != 0:
+        temp_arr[idx] = carry_over
+
+    idx = 0
+    for i in range(tot_size):
+        if temp_arr[i] != None:
+            temp_arr[idx] = temp_arr[i]
+            temp_arr[i] = None
+            idx += 1
+
+    import pdb; pdb.set_trace()
+    final_arr = countNones(temp_arr)
+
+    
+    return final_arr
+
+
+
+
+
 
 
 # ------------------- PROBLEM 13 - SPIRAL MATRIX -------------------------
