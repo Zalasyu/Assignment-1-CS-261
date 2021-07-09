@@ -325,7 +325,7 @@ def count_sort(arr: StaticArray) -> StaticArray:
     """
     # We must assume any of the possible elements are possible.
     max = int(10^9)
-    min -int(10^9)
+    min = -int(10^9)
 
     # Find the max and min value in the passed StaticArray
     for i in range(arr.size()):
@@ -347,7 +347,7 @@ def count_sort(arr: StaticArray) -> StaticArray:
     # Track occurences of each unique element in passed StaticArray
     for i in range(arr.size()):
         val = count.get(arr.get(i) - min)
-        count.set(arr.get(i) - min, value + 1)
+        count.set(arr.get(i) - min, val + 1)
 
     # Get the Running Sum
     # This will help for placement later

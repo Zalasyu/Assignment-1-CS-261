@@ -227,3 +227,66 @@ def test_remove_duplicates(capfd):
         assert out == expected[count + 1]
 
         count += 2
+
+
+
+def test_count_sort(capfd):
+    test_cases = (
+        [1, 2, 4, 3, 5], [5, 4, 3, 2, 1], [0, -5, -3, -4, -2, -1, 0],
+        [-3, -2, -1, 0, 1, 2, 3], [1, 2, 3, 4, 3, 2, 1, 5, 5, 2, 3, 1],
+        [10100, 10721, 10320, 10998], [-100320, -100450, -100999, -100001],
+    )
+
+    expected = [
+        "STAT_ARR Size: 5 [1, 2, 4, 3, 5]\n",
+        "STAT_ARR Size: 5 [5, 4, 3, 2, 1]\n",
+        "STAT_ARR Size: 5 [5, 4, 3, 2, 1]\n",
+        "STAT_ARR Size: 5 [5, 4, 3, 2, 1]\n",
+        "STAT_ARR Size: 7 [0, -5, -3, -4, -2, -1, 0]\n",
+        "STAT_ARR Size: 7 [0, 0, -1, -2, -3, -4, -5]\n",
+        "STAT_ARR Size: 7 [-3, -2, -1, 0, 1, 2, 3]\n",
+        "STAT_ARR Size: 7 [3, 2, 1, 0, -1, -2, -3]\n",
+        "STAT_ARR Size: 12 [1, 2, 3, 4, 3, 2, 1, 5, 5, 2, 3, 1]\n",
+        "STAT_ARR Size: 12 [5, 5, 4, 3, 3, 3, 2, 2, 2, 1, 1, 1]\n",
+        "STAT_ARR Size: 4 [10100, 10721, 10320, 10998]\n",
+        "STAT_ARR Size: 4 [10998, 10721, 10320, 10100]\n",
+        "STAT_ARR Size: 4 [-100320, -100450, -100999, -100001]\n",
+        "STAT_ARR Size: 4 [-100001, -100320, -100450, -100999]\n"
+
+    ]
+
+    count = 0
+    for case in test_cases:
+        arr = StaticArray(len(case))
+        for i, value in enumerate(case):
+            arr[i] = value
+        print(arr if len(case) < 50 else 'Started sorting large array')
+        out, err = capfd.readouterr()
+        assert out == expected[count]
+
+        result = count_sort(arr)
+        print(result if len(case) < 50 else 'Finished sorting large array')
+        out, err = capfd.readouterr()
+        assert out == expected[count + 1]
+
+        count += 2
+
+    expected2 = ["Started sorting large array of 5000000 elements\n",
+                "Finished sorting large array of 5000000 elements\n"]
+
+    array_size = 5_000_000
+    min_val = random.randint(-10**9, 10**9 - 998)
+    max_val = min_val + 998
+    case = [random.randint(min_val, max_val) for _ in range(array_size)]
+    arr = StaticArray(len(case))
+    for i, value in enumerate(case):
+        arr[i] = value
+
+    print(f'Started sorting large array of {array_size} elements')
+    out, err = capfd.readouterr()
+    assert out == expected2[0]
+
+    result = count_sort(arr)
+    print(f'Finished sorting large array of {array_size} elements')
+    out, err = capfd.readouterr()
+    assert out == expected2[1]
