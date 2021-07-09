@@ -479,7 +479,7 @@ def mod_count_sort(arr: StaticArray) -> StaticArray:
     while i >= 0:
         # ascending Order
         idx = count[arr[i] - min] - 1
-        out_arr.set(i, arr[i])
+        out_arr.set(idx, arr[i])
 
         count.set(arr[i] - min, count[arr[i] - min] - 1)
         i -= 1
@@ -502,7 +502,6 @@ def sorted_squares(arr: StaticArray) -> StaticArray:
             new_arr[i] = arr[i]
         i += 1
     new_arr = mod_count_sort(new_arr)
-    import pdb; pdb.set_trace()
     for i in range(size):
         new_arr[i] = new_arr[i] *new_arr[i]
     return new_arr
