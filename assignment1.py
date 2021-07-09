@@ -300,8 +300,8 @@ def count_sort(arr: StaticArray) -> StaticArray:
     """
     size = arr.size()
     # We must assume any of the possible elements are possible.
-    max = int(10^9)
-    min = -int(10^9)
+    max = -int(10**9)
+    min = int(10**9)
 
     # Find the max and min value in the passed StaticArray
     for i in range(size):
@@ -358,6 +358,7 @@ def countNones(arr:StaticArray) -> StaticArray:
                 to a new StaticArray object with no Nones
     OUTPUT: A StaticArray with no None elements
     """
+    size = arr.size()
     count_Nones = 0
     for i in range(size):
         if arr[i] == None:
@@ -367,18 +368,17 @@ def countNones(arr:StaticArray) -> StaticArray:
     final_arr = StaticArray(final_size)
 
     # import pdb; pdb.set_trace()
-    final_arr[0] = new_arr[0]
+    final_arr[0] = arr[0]
     count = 1
     i = 1
     while i < final_size:
-        if new_arr[count] == None:
+        if arr[count] == None:
             count += 1
         else:
-            final_arr[i] = new_arr[count]
+            final_arr[i] = arr[count]
             i += 1
             count += 1
     return final_arr
-
 
 def sa_intersection(arr1: StaticArray, arr2: StaticArray, arr3: StaticArray) \
         -> StaticArray:
@@ -387,59 +387,126 @@ def sa_intersection(arr1: StaticArray, arr2: StaticArray, arr3: StaticArray) \
     MECHANICS: Filter out elements not shared by all three StaticArray objects
     OUTPUT: A StaticArray object that is the intersection of all three StaticArray  objects
     """
-    size = arr1.size() + arr2.size() + arr3.size()
+    # Preprocess arrays
+    tot_size = int(arr1.size() + arr2.size() + arr3.size())
+    size1 = arr1.size()
+    size2 = arr2.size()
+    size3 = arr3.size()
 
-    combined_arr = StaticArray(size)
+    match_arr = StaticArray(tot_size)
 
-    idx1 = 0
-    idx2 = arr2.size()
-    idx3 = idx2 + arr3.size()
-    # First array
-    for i in range(arr1.size()):
-        combined_arr[idx1] = arr1[i]
-        idx1 += 1
-
-    # Second Array
-    for i in range(arr2.size()):
-        combined_arr[idx2] = arr2[i]
-        idx2 += 1
-
-    # third Array
-    for i in range(arr3.size()):
-        combined_arr[idx3] = arr3[i]
-        idx3 += 1
-
-    new_arr = count_sort(combined_arr)
+    # No Matches array
+    no_arr = StaticArray(1)
 
     # If the combined arr is less than 3, then an element is not shared by all arrays.
-    if combined_arr.size() < 3:
-        no_arr = StaticArray(1)
-        no_arr[1] = None
+    if match_arr.size() < 3:
+        return no_arr
+    #initialize
+    idx = 0
+    i=j=k=0
+    while((i<size1) and (j<size2) and (k < size3)):
+        if ((arr1[i] == arr2[j]) and (arr2[j] == arr3[k])):
+            match_arr[idx] = arr1[i]
+            idx += 1
+            i += 1
+            j += 1
+            k += 1
+        elif arr1[i] < arr2[j]:
+            i += 1
+        elif arr2[j] < arr3[k]:
+            j += 1
+        else:
+            k += 1
+
+    if match_arr[0] == None:
         return no_arr
 
-    # Find triplets
-    # Size of Comvbined array divisible by 3?
-    divby3_arr = StaticArray(combined_arr.size()/3)
-    if size % 3 == 0:
-        for i in range(2, size, 3):
-            if arr[i] == arr[i-1] == arr[i-2]:
-                divby3_arr[i] = arr[i]
+    final_arr = countNones(match_arr)
 
-    else:
-        for i in range(2, size, 3):
-            if arr[i] == arr[i-1] == arr[i-2]:
-                divby3_arr[i] = arr[i]
+
+    return final_arr
 
 
 
 # ------------------- PROBLEM 11 - SORTED SQUARES ---------------------------
+def mod_count_sort(arr: StaticArray) -> StaticArray:
+    """
+    INPUT: A StaticArray (Contains a list of integers (+/-) from -10^9 to +10^9)
+    MECHANICS: Perform a non-comparison sort
+    OUTPUT: A sorted Static
+    """
+    size = arr.size()
+    # We must assume any of the possible elements are possible.
+    max = -int(10**9)
+    min = int(10**9)
+
+    # Find the max and min value in the passed StaticArray
+    for i in range(size):
+        if min > arr[i]:
+            min = arr[i]
+        if max < arr[i]:
+            max = arr[i]
+
+    # Offset the max value due to negative values present
+    max = (max - min) + 1
+
+    # Create our count and output StaticArray objects
+    count = StaticArray(max)
+    out_arr = StaticArray(size)
+
+    # Fill count array with zeros
+    for i in range(max):
+        count[i] = 0
+
+    # Track occurences of each unique element in passed StaticArray
+    for i in range(size):
+        val = count[arr[i] -min]
+        count.set(arr[i] - min, val + 1)
+
+    # Get the Running Sum
+    # This will help for placement later
+    # We sum the value of the previous index with the value of the current index
+    # The value at that index represents that there is/are 'value' occurenes of values 
+    #                   less than or equal to the index value
+    for i in range(1, max):
+        count.set(i, count[i] + count[i-1])
+
+
+    # Start working backwards on the array and forwards on the count array.
+    # This finds the index of each integer of the OG array in the our count array
+    # Placement Commences
+    i = size - 1
+    while i >= 0:
+        # ascending Order
+        idx = count[arr[i] - min] - 1
+        out_arr.set(i, arr[i])
+
+        count.set(arr[i] - min, count[arr[i] - min] - 1)
+        i -= 1
+    return out_arr
 
 
 def sorted_squares(arr: StaticArray) -> StaticArray:
     """
-    TODO: Write this implementation
+    INPUT: A StaticArray Object
+    MECHANICS: Square each element and resort
+    OUTPUT: A sorted StaticArray with elements squared from previous StaticArray object
     """
-    pass
+    size = arr.size()
+    new_arr = StaticArray(size)
+    i = 0
+    while (i < size):
+        if arr[i] < 0:
+            new_arr[i] = -1*arr[i]
+        else:
+            new_arr[i] = arr[i]
+        i += 1
+    new_arr = mod_count_sort(new_arr)
+    import pdb; pdb.set_trace()
+    for i in range(size):
+        new_arr[i] = new_arr[i] *new_arr[i]
+    return new_arr
+
 
 
 # ------------------- PROBLEM 12 - ADD_NUMBERS ------------------------------

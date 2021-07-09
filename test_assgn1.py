@@ -310,3 +310,30 @@ def test_sa_intersection(capfd):
         out, err = capfd.readouterr()
         assert out == expected[count]
         count += 1
+def test_sorted_squares(capfd):
+    test_cases = (
+     [1, 2, 3, 4, 5],
+     [-5, -4, -3, -2, -1, 0],
+     [-3, -2, -2, 0, 1, 2, 3],
+    )
+    expected = [
+        "STAT_ARR Size: 5 [1, 2, 3, 4, 5]\n",
+        "STAT_ARR Size: 5 [1, 4, 9, 16, 25]\n",
+        "STAT_ARR Size: 6 [-5, -4, -3, -2, -1, 0]\n",
+        "STAT_ARR Size: 6 [0, 1, 4, 9, 16, 25]\n",
+        "STAT_ARR Size: 7 [-3, -2, -2, 0, 1, 2, 3]\n",
+        "STAT_ARR Size: 7 [0, 1, 4, 4, 4, 9, 9]\n"
+    ]
+    count = 0
+    for case in test_cases:
+        arr = StaticArray(len(case))
+        for i, value in enumerate(sorted(case)):
+            arr[i] = value
+        print(arr)
+        out, err = capfd.readouterr()
+        assert out == expected[count]
+        result = sorted_squares(arr)
+        print(result)
+        out, err = capfd.readouterr()
+        assert out == expected[count+1]
+        count += 2
