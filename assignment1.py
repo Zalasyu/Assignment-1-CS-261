@@ -319,9 +319,60 @@ def remove_duplicates(arr: StaticArray) -> StaticArray:
 
 def count_sort(arr: StaticArray) -> StaticArray:
     """
-    TODO: Write this implementation
+    INPUT: A StaticArray (Contains a list of integers (+/-) from -10^9 to +10^9)
+    MECHANICS: Perform a non-comparison sort
+    OUTPUT: A sorted Static
     """
-    pass
+    # We must assume any of the possible elements are possible.
+    max = int(10^9)
+    min -int(10^9)
+
+    # Find the max and min value in the passed StaticArray
+    for i in range(arr.size()):
+        if min > arr[i]:
+            min = arr[i]
+        if max < arr[i]:
+            max = arr[i]
+
+    # Offset the max value due to negative values present
+    max = (max - min) + 1
+
+    # Create out count StaticArray object
+    count = StaticArray(max)
+
+    # Fill count array with zeros
+    for i in range(count.size()):
+        count[i] = 0
+
+    # Track occurences of each unique element in passed StaticArray
+    for i in range(arr.size()):
+        val = count.get(arr.get(i) - min)
+        count.set(arr.get(i) - min, value + 1)
+
+    # Get the Running Sum
+    # This will help for placement later
+    # We sum the value of the previous index with the value of the current index
+    # The value at that index represents that there is/are 'value' occurenes of values 
+    #                   less than or equal to the index value
+    for i in range(1, max):
+        count.set(i, count.get(i) + count.get(i-1))
+
+    # Create the output array
+    out_arr = StaticArray(arr.size())
+
+    # Start working backwards on the array and forwards on the count array.
+    # This finds the index of each integer of the OG array in the our count array
+    # Placement Commences
+    i = arr.size() - 1
+    while i >= 0:
+        # Descending Order
+        idx = count.get(arr.get(i) - min) - 1
+        out_arr.set(arr.size() - idx -1, arr.get(i))
+
+        count.set(arr.get(i) - min, count.get(arr.get(i) - min) - 1)
+        i -= 1
+    return out_arr
+
 
 
 # ------------------- PROBLEM 10 - SA_INTERSECTION --------------------------
