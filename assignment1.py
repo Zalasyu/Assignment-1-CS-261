@@ -298,12 +298,13 @@ def count_sort(arr: StaticArray) -> StaticArray:
     MECHANICS: Perform a non-comparison sort
     OUTPUT: A sorted Static
     """
+    size = arr.size()
     # We must assume any of the possible elements are possible.
     max = int(10^9)
     min = -int(10^9)
 
     # Find the max and min value in the passed StaticArray
-    for i in range(arr.size()):
+    for i in range(size):
         if min > arr[i]:
             min = arr[i]
         if max < arr[i]:
@@ -312,17 +313,18 @@ def count_sort(arr: StaticArray) -> StaticArray:
     # Offset the max value due to negative values present
     max = (max - min) + 1
 
-    # Create out count StaticArray object
+    # Create our count and output StaticArray objects
     count = StaticArray(max)
+    out_arr = StaticArray(size)
 
     # Fill count array with zeros
     for i in range(count.size()):
         count[i] = 0
 
     # Track occurences of each unique element in passed StaticArray
-    for i in range(arr.size()):
-        val = count.get(arr.get(i) - min)
-        count.set(arr.get(i) - min, val + 1)
+    for i in range(size):
+        val = count[arr[i] -min]
+        count.set(arr[i] - min, val + 1)
 
     # Get the Running Sum
     # This will help for placement later
@@ -330,35 +332,104 @@ def count_sort(arr: StaticArray) -> StaticArray:
     # The value at that index represents that there is/are 'value' occurenes of values 
     #                   less than or equal to the index value
     for i in range(1, max):
-        count.set(i, count.get(i) + count.get(i-1))
+        count.set(i, count[i] + count[i-1])
 
-    # Create the output array
-    out_arr = StaticArray(arr.size())
 
     # Start working backwards on the array and forwards on the count array.
     # This finds the index of each integer of the OG array in the our count array
     # Placement Commences
-    i = arr.size() - 1
+    i = size - 1
     while i >= 0:
         # Descending Order
-        idx = count.get(arr.get(i) - min) - 1
-        out_arr.set(arr.size() - idx -1, arr.get(i))
+        idx = count[arr[i] - min] - 1
+        out_arr.set(size - idx -1, arr[i])
 
-        count.set(arr.get(i) - min, count.get(arr.get(i) - min) - 1)
+        count.set(arr[i] - min, count[arr[i] - min] - 1)
         i -= 1
     return out_arr
 
 
 
 # ------------------- PROBLEM 10 - SA_INTERSECTION --------------------------
+def countNones(arr:StaticArray) -> StaticArray:
+    """
+    INPUT: A StaticArray object
+    MECHANICS: Resize the passed StaticArray object that may contian Nones in it
+                to a new StaticArray object with no Nones
+    OUTPUT: A StaticArray with no None elements
+    """
+    count_Nones = 0
+    for i in range(size):
+        if arr[i] == None:
+            count_Nones += 1
+
+    final_size = size - count_Nones
+    final_arr = StaticArray(final_size)
+
+    # import pdb; pdb.set_trace()
+    final_arr[0] = new_arr[0]
+    count = 1
+    i = 1
+    while i < final_size:
+        if new_arr[count] == None:
+            count += 1
+        else:
+            final_arr[i] = new_arr[count]
+            i += 1
+            count += 1
+    return final_arr
 
 
 def sa_intersection(arr1: StaticArray, arr2: StaticArray, arr3: StaticArray) \
         -> StaticArray:
     """
-    TODO: Write this implementation
+    INPUT: Three Sorted StaticArray Objects
+    MECHANICS: Filter out elements not shared by all three StaticArray objects
+    OUTPUT: A StaticArray object that is the intersection of all three StaticArray  objects
     """
-    pass
+    size = arr1.size() + arr2.size() + arr3.size()
+
+    combined_arr = StaticArray(size)
+
+    idx1 = 0
+    idx2 = arr2.size()
+    idx3 = idx2 + arr3.size()
+    # First array
+    for i in range(arr1.size()):
+        combined_arr[idx1] = arr1[i]
+        idx1 += 1
+
+    # Second Array
+    for i in range(arr2.size()):
+        combined_arr[idx2] = arr2[i]
+        idx2 += 1
+
+    # third Array
+    for i in range(arr3.size()):
+        combined_arr[idx3] = arr3[i]
+        idx3 += 1
+
+    new_arr = count_sort(combined_arr)
+
+    # If the combined arr is less than 3, then an element is not shared by all arrays.
+    if combined_arr.size() < 3:
+        no_arr = StaticArray(1)
+        no_arr[1] = None
+        return no_arr
+
+    # Find triplets
+    # Size of Comvbined array divisible by 3?
+    divby3_arr = StaticArray(combined_arr.size()/3)
+    if size % 3 == 0:
+        for i in range(2, size, 3):
+            if arr[i] == arr[i-1] == arr[i-2]:
+                divby3_arr[i] = arr[i]
+
+    else:
+        for i in range(2, size, 3):
+            if arr[i] == arr[i-1] == arr[i-2]:
+                divby3_arr[i] = arr[i]
+
 
 
 # ------------------- PROBLEM 11 - SORTED SQUARES ---------------------------

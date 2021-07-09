@@ -274,19 +274,39 @@ def test_count_sort(capfd):
     expected2 = ["Started sorting large array of 5000000 elements\n",
                 "Finished sorting large array of 5000000 elements\n"]
 
-    array_size = 5_000_000
-    min_val = random.randint(-10**9, 10**9 - 998)
-    max_val = min_val + 998
-    case = [random.randint(min_val, max_val) for _ in range(array_size)]
-    arr = StaticArray(len(case))
-    for i, value in enumerate(case):
-        arr[i] = value
-
-    print(f'Started sorting large array of {array_size} elements')
-    out, err = capfd.readouterr()
-    assert out == expected2[0]
-
-    result = count_sort(arr)
-    print(f'Finished sorting large array of {array_size} elements')
-    out, err = capfd.readouterr()
-    assert out == expected2[1]
+#    array_size = 5_000_000
+#    min_val = random.randint(-10**9, 10**9 - 998)
+#    max_val = min_val + 998
+#    case = [random.randint(min_val, max_val) for _ in range(array_size)]
+#    arr = StaticArray(len(case))
+#    for i, value in enumerate(case):
+#        arr[i] = value
+#
+#    print(f'Started sorting large array of {array_size} elements')
+#    out, err = capfd.readouterr()
+#    assert out == expected2[0]
+#
+#    result = count_sort(arr)
+#    print(f'Finished sorting large array of {array_size} elements')
+#    out, err = capfd.readouterr()
+#    assert out == expected2[1]
+def test_sa_intersection(capfd):
+    test_cases = (
+     ([1, 2, 3], [3, 4, 5], [2, 3, 4]),
+     ([1, 2], [2, 4], [3, 4]),
+     ([1, 1, 2, 2, 5, 75], [1, 2, 2, 12, 75, 90], [-5, 2, 2, 2, 20, 75, 95])
+    )
+    expected = ["STAT_ARR Size: 1 [3]\n",
+              "STAT_ARR Size: 1 [None]\n",
+              "STAT_ARR Size: 3 [2, 2, 75]\n"]
+    count = 0
+    for case in test_cases:
+        arr = []
+        for i, lst in enumerate(case):
+            arr.append(StaticArray(len(lst)))
+            for j, value in enumerate(sorted(lst)):
+                arr[i][j] = value
+        print(sa_intersection(arr[0], arr[1], arr[2]))
+        out, err = capfd.readouterr()
+        assert out == expected[count]
+        count += 1
