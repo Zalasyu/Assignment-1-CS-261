@@ -289,7 +289,28 @@ def remove_duplicates(arr: StaticArray) -> StaticArray:
         if arr[i] != arr[i-1]:
             new_arr[i] = arr[i]
 
-    return new_arr
+    count_Nones = 0
+    for i in range(size):
+        if new_arr[i] == None:
+            count_Nones += 1
+
+    final_size = size - count_Nones
+    final_arr = StaticArray(final_size)
+
+    # import pdb; pdb.set_trace()
+    final_arr[0] = new_arr[0]
+    count = 1
+    i = 1
+    while i < final_size:
+        if new_arr[count] == None:
+            count += 1
+        else:
+            final_arr[i] = new_arr[count]
+            i += 1
+            count += 1
+
+
+    return final_arr
 
 
 

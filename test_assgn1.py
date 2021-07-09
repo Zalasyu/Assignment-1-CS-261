@@ -217,7 +217,6 @@ def test_remove_duplicates(capfd):
         for i, value in enumerate(case):
             arr[i] = value
 
-        import pdb; pdb.set_trace()
         print(arr)
         out, err = capfd.readouterr()
         assert out == expected[count]
