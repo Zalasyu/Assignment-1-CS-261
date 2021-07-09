@@ -274,9 +274,23 @@ def sa_sort(arr: StaticArray) -> None:
 
 def remove_duplicates(arr: StaticArray) -> StaticArray:
     """
-    TODO: Write this implementation
+    INPUT: A StaticArray object (Elements are sorted)
+    MECHANICS: Takes out duplicates from StaticArray Object
+    OUTPUT: A sort StaticArray object with no duplicates
     """
-    pass
+    size = arr.size()
+    new_arr = StaticArray(size)
+
+    if size == 1:
+        return arr
+
+    new_arr[0] = arr[0]
+    for i in range(1, size):
+        if arr[i] != arr[i-1]:
+            new_arr[i] = arr[i]
+
+    return new_arr
+
 
 
 # ------------------- PROBLEM 9 - COUNT_SORT --------------------------------

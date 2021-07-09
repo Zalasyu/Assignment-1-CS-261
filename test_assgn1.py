@@ -190,5 +190,41 @@ def test_sa_sort(capfd):
         assert out == expected[count + 1]
         count += 2
 
+def test_remove_duplicates(capfd):
+    test_cases = (
+     [1], [1, 2], [1, 1, 2], [1, 20, 30, 40, 500, 500, 500],
+     [5, 5, 5, 4, 4, 3, 2, 1, 1], [1, 1, 1, 1, 2, 2, 2, 2]
+    )
+    expected = ["STAT_ARR Size: 1 [1]\n",
+                "STAT_ARR Size: 1 [1]\n",
+                "STAT_ARR Size: 2 [1, 2]\n",
+                "STAT_ARR Size: 2 [1, 2]\n",
+                "STAT_ARR Size: 3 [1, 1, 2]\n",
+                "STAT_ARR Size: 2 [1, 2]\n",
+                "STAT_ARR Size: 7 [1, 20, 30, 40, 500, 500, 500]\n",
+                "STAT_ARR Size: 5 [1, 20, 30, 40, 500]\n",
+                "STAT_ARR Size: 9 [5, 5, 5, 4, 4, 3, 2, 1, 1]\n",
+                "STAT_ARR Size: 5 [5, 4, 3, 2, 1]\n",
+                "STAT_ARR Size: 8 [1, 1, 1, 1, 2, 2, 2, 2]\n",
+                "STAT_ARR Size: 2 [1, 2]\n",
+                "STAT_ARR Size: 8 [1, 1, 1, 1, 2, 2, 2, 2]\n"
+                ]
 
+    count = 0
+    for case in test_cases:
+        arr = StaticArray(len(case))
 
+        for i, value in enumerate(case):
+            arr[i] = value
+
+        import pdb; pdb.set_trace()
+        print(arr)
+        out, err = capfd.readouterr()
+        assert out == expected[count]
+
+        new_arr = remove_duplicates(arr)
+        print(new_arr)
+        out, err = capfd.readouterr()
+        assert out == expected[count + 1]
+
+        count += 2
