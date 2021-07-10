@@ -519,11 +519,50 @@ def add_numbers(arr1: StaticArray, arr2: StaticArray) -> StaticArray:
     """
     tot_size = arr1.size() + arr2.size()
     temp_arr = StaticArray(tot_size)
+    # Account for different sized arrays
+    if arr1.size() > arr2.size():
+        temp_arr2 = StaticArray(arr1.size())
+
+        for i in range(temp_arr2.size()):
+            temp_arr2[i] = 0
+
+        if arr2.size() == 1:
+            idx_arr2 = 1
+        else:
+            idx_arr2 = temp_arr2.size() - arr2.size()
+
+        i = 0
+        while(idx_arr2 < temp_arr2.size() and i < arr2.size()):
+            temp_arr2[idx_arr2] = arr2[i]
+            i += 1
+            idx_arr2 += 1
+
+        arr2 = temp_arr2
+    elif arr2.size() > arr1.size():
+        temp_arr1 = StaticArray(arr2.size())
+
+        for i in range(temp_arr1.size()):
+            temp_arr1[i] = 0
+
+        if arr1.size() == 1:
+            idx_arr1 = 1
+        else:
+            idx_arr1 = temp_arr1.size() - arr1.size()
+
+        i = 0
+        while(idx_arr1 < temp_arr1.size() and i < arr1.size()):
+            temp_arr1[idx_arr1] = arr1[i]
+            i += 1
+            idx_arr1 += 1
+
+        arr1 = temp_arr1
+        
+
+    # Add Digits!
     idx1 = arr1.size() - 1
     idx2 = arr2.size() - 1
     carry_over = 0
     idx = temp_arr.size() - 1
-    import pdb; pdb.set_trace()
     while ((idx1 >= 0) and (idx2 >= 0)):
         sum = carry_over + arr1[idx1] + arr2[idx2]
         carry_over = int(sum /10)
@@ -541,7 +580,6 @@ def add_numbers(arr1: StaticArray, arr2: StaticArray) -> StaticArray:
             temp_arr[i] = None
             idx += 1
 
-    import pdb; pdb.set_trace()
     final_arr = countNones(temp_arr)
 
     
@@ -554,23 +592,72 @@ def add_numbers(arr1: StaticArray, arr2: StaticArray) -> StaticArray:
 
 
 # ------------------- PROBLEM 13 - SPIRAL MATRIX -------------------------
-
+def createMatrix(rows:int, cols:int):
+    """
+    INPUT: two integers (rows x cols)
+    OUTPUT: StaticArray of StaticArrays (2D Matrix)
+    """
+    matrix = StaticArray(rows)
+    for row in range(rows.size()):
+        matrix[row] = StaticArray(cols)
+    return  matrix
 
 def spiral_matrix(rows: int, cols: int, start: int) -> StaticArray:
     """
-    TODO: Write this implementation
+    INPUT: Three integers (# rows, # cols, #start int)
+    MECHANICS: 
+                1. Create a 2D matrix (StaticArray of StaticArrays [rows x cols])
+                2. Fill Matrix by increment of one
+                3. Neg start integer starts at pos bottom left
+                        and 
+                  Positive start integer starts ar pos top right
+                4. Postive start int spiral clockwise to center
+                        and
+                  Negative start integer sprials counterclockwise to center
+    OUTPUT: A Spirally-filled 2D Matrix
     """
-    pass
+    matrix = createMatrix(rows, cols)
 
+#    if start > 0:
+#        matrix[0, cols - 1] = start
+#
+#
+#    else:
+#
 
 # ------------------- PROBLEM 14 - TRANSFORM_STRING -------------------------
 
 
 def transform_string(source: str, s1: str, s2: str) -> str:
     """
-    TODO: Write this implementation
+    INPUT: Three strings (source [to be translated], s1 [trigger], s2 [replacement])
+    MECHANICS: Source should be processed one character at 
+    a time, and the output string should be constructed according to the following rules:
+    1) If the character from the source string is present in s1, it should be replaced by the 
+    character at the same index in s2.
+    2) Otherwise, if the character is:
+        a) Uppercase letter -> replace with ' '
+        b) Lowercase letter -> replace with '#'
+        c) Digit -> replace with '!'
+        d) Anything else -> replace with '='
+    OUTPUT: A transformed string
     """
-    pass
+    final_form = ''
+    # Traverse the source and start transforming
+    for ch in source:
+        # Is there a trigger? Is ch in s1?
+        tg_idx = s1.find(ch)
+        if tg_idx >= 0:
+            final_form = final_form + s2[tg_idx]
+        elif ch.isupper():
+            final_form = final_form + ' '
+        elif ch.islower():
+            final_form = final_form + '#'
+        elif ch.isdigit():
+            final_form = final_form + '!'
+        else:
+            final_form = final_form + '='
+    return final_form
 
 
 # ------------------- BASIC TESTING -----------------------------------------
