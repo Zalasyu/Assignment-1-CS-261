@@ -429,61 +429,29 @@ def sa_intersection(arr1: StaticArray, arr2: StaticArray, arr3: StaticArray) \
 
 
 # ------------------- PROBLEM 11 - SORTED SQUARES ---------------------------
-def mod_count_sort(arr: StaticArray) -> StaticArray:
+
+def sort(arr1:StaticArray) -> StaticArray:
     """
-    INPUT: A StaticArray (Contains a list of integers (+/-) from -10^9 to +10^9)
-    MECHANICS: Perform a non-comparison sort
-    OUTPUT: A sorted Static
+    INPUT: An unsorted StaticArray that contains neg values
+    MECHANICS: Sort StaticArray that ignores neg values
+    OUTPUT: A sign-insensitive sorted StaticArray
     """
-    size = arr.size()
-    # We must assume any of the possible elements are possible.
-    max = -int(10**9)
-    min = int(10**9)
+    sort_arr = []
+    arr = []
+    for i in range(arr1.size()):
+        arr.append(arr1[i])
+    while arr:
+        min = arr[0]
+        for val in arr:
+            if val < min:
+                min = val
+        sort_arr.append(min)
+        arr.remove(min)
+    final_arr = StaticArray(arr1.size())
+    for i in range(arr1.size()):
+        final_arr[i] = sort_arr[i]
 
-    # Find the max and min value in the passed StaticArray
-    for i in range(size):
-        if min > arr[i]:
-            min = arr[i]
-        if max < arr[i]:
-            max = arr[i]
-
-    # Offset the max value due to negative values present
-    max = (max - min) + 1
-
-    # Create our count and output StaticArray objects
-    count = StaticArray(max)
-    out_arr = StaticArray(size)
-
-    # Fill count array with zeros
-    for i in range(max):
-        count[i] = 0
-
-    # Track occurences of each unique element in passed StaticArray
-    for i in range(size):
-        val = count[arr[i] -min]
-        count.set(arr[i] - min, val + 1)
-
-    # Get the Running Sum
-    # This will help for placement later
-    # We sum the value of the previous index with the value of the current index
-    # The value at that index represents that there is/are 'value' occurenes of values 
-    #                   less than or equal to the index value
-    for i in range(1, max):
-        count.set(i, count[i] + count[i-1])
-
-
-    # Start working backwards on the array and forwards on the count array.
-    # This finds the index of each integer of the OG array in the our count array
-    # Placement Commences
-    i = size - 1
-    while i >= 0:
-        # ascending Order
-        idx = count[arr[i] - min] - 1
-        out_arr.set(idx, arr[i])
-
-        count.set(arr[i] - min, count[arr[i] - min] - 1)
-        i -= 1
-    return out_arr
+    return final_arr
 
 
 def sorted_squares(arr: StaticArray) -> StaticArray:
@@ -492,18 +460,14 @@ def sorted_squares(arr: StaticArray) -> StaticArray:
     MECHANICS: Square each element and resort
     OUTPUT: A sorted StaticArray with elements squared from previous StaticArray object
     """
+
     size = arr.size()
     new_arr = StaticArray(size)
-    i = 0
-    while (i < size):
-        if arr[i] < 0:
-            new_arr[i] = -1*arr[i]
-        else:
-            new_arr[i] = arr[i]
-        i += 1
-    new_arr = mod_count_sort(new_arr)
     for i in range(size):
-        new_arr[i] = new_arr[i] *new_arr[i]
+        new_arr[i] = arr[i] * arr[i]
+
+    import pdb; pdb.set_trace()
+    new_arr = sort(new_arr)
     return new_arr
 
 
