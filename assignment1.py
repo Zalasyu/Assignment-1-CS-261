@@ -430,28 +430,6 @@ def sa_intersection(arr1: StaticArray, arr2: StaticArray, arr3: StaticArray) \
 
 # ------------------- PROBLEM 11 - SORTED SQUARES ---------------------------
 
-def sort(arr1:StaticArray) -> StaticArray:
-    """
-    INPUT: An unsorted StaticArray that contains neg values
-    MECHANICS: Sort StaticArray that ignores neg values
-    OUTPUT: A sign-insensitive sorted StaticArray
-    """
-    sort_arr = []
-    arr = []
-    for i in range(arr1.size()):
-        arr.append(arr1[i])
-    while arr:
-        min = arr[0]
-        for val in arr:
-            if val < min:
-                min = val
-        sort_arr.append(min)
-        arr.remove(min)
-    final_arr = StaticArray(arr1.size())
-    for i in range(arr1.size()):
-        final_arr[i] = sort_arr[i]
-
-    return final_arr
 
 
 def sorted_squares(arr: StaticArray) -> StaticArray:
@@ -460,16 +438,7 @@ def sorted_squares(arr: StaticArray) -> StaticArray:
     MECHANICS: Square each element and resort
     OUTPUT: A sorted StaticArray with elements squared from previous StaticArray object
     """
-
-    size = arr.size()
-    new_arr = StaticArray(size)
-    for i in range(size):
-        new_arr[i] = arr[i] * arr[i]
-
-    import pdb; pdb.set_trace()
-    new_arr = sort(new_arr)
-    return new_arr
-
+    pass
 
 
 # ------------------- PROBLEM 12 - ADD_NUMBERS ------------------------------
@@ -556,15 +525,6 @@ def add_numbers(arr1: StaticArray, arr2: StaticArray) -> StaticArray:
 
 
 # ------------------- PROBLEM 13 - SPIRAL MATRIX -------------------------
-def createMatrix(rows:int, cols:int):
-    """
-    INPUT: two integers (rows x cols)
-    OUTPUT: StaticArray of StaticArrays (2D Matrix)
-    """
-    matrix = StaticArray(rows)
-    for row in range(rows.size()):
-        matrix[row] = StaticArray(cols)
-    return  matrix
 
 def spiral_matrix(rows: int, cols: int, start: int) -> StaticArray:
     """
@@ -580,14 +540,7 @@ def spiral_matrix(rows: int, cols: int, start: int) -> StaticArray:
                   Negative start integer sprials counterclockwise to center
     OUTPUT: A Spirally-filled 2D Matrix
     """
-    matrix = createMatrix(rows, cols)
-
-#    if start > 0:
-#        matrix[0, cols - 1] = start
-#
-#
-#    else:
-#
+    pass
 
 # ------------------- PROBLEM 14 - TRANSFORM_STRING -------------------------
 
